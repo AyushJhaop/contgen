@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  accent-color: #38bdf8;
+  scrollbar-color: #64748b #0f172a;
+}
+
+::selection {
+  background-color: rgba(56, 189, 248, 0.3);
+  color: #f8fafc;
+}
+
+/* Auto-sizing textareas with stable horizontal width (form-fields-automatically-fit-contents) */
+textarea.auto-fit-textarea {
+  field-sizing: content;
+  height: auto;
+  width: 100%;
+  min-block-size: 3lh;
+  max-block-size: 10lh;
+  resize: vertical;
+}
+
+/* Auto-sizing inline text inputs (form-fields-automatically-fit-contents) */
+input.auto-fit-input {
+  field-sizing: content;
+  width: auto;
+  min-inline-size: 15ch;
+  max-inline-size: 36ch;
+  align-self: start;
+}
+
+/* User-interaction-aware validity styling (browser-ui-theming) */
+input:not(input[type="range"]):user-invalid,
+textarea:user-invalid {
+  border-color: #fb7185;
+  outline-color: #fb7185;
+}
+
+input:not(input[type="range"]):user-valid,
+textarea:user-valid {
+  border-color: rgba(56, 189, 248, 0.45);
+}
+

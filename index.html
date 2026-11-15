@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Founder AI Carousel Automation Studio — React + Tailwind + Python</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      accent-color: #38bdf8;
+      scrollbar-color: #64748b #0f172a;
+    }
+    ::selection {
+      background-color: rgba(56, 189, 248, 0.3);
+      color: #f8fafc;
+    }
+    textarea.auto-fit-textarea {
+      field-sizing: content;
+      height: auto;
+      width: 100%;
+      min-block-size: 3lh;
+      max-block-size: 10lh;
+      resize: vertical;
+    }
+    input.auto-fit-input {
+      field-sizing: content;
+      width: auto;
+      min-inline-size: 15ch;
+      max-inline-size: 36ch;
+      align-self: start;
+    }
+    input:not(input[type="range"]):user-invalid,
+    textarea:user-invalid {
+      border-color: #fb7185;
+      outline-color: #fb7185;
+    }
+    input:not(input[type="range"]):user-valid,
+    textarea:user-valid {
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const THEME_STYLES = {
+      obsidian_slate: {
+        cardBg: "bg-slate-900 border-slate-700/80 text-slate-50",
+        boxBg: "bg-slate-800/80 border-slate-700",
+        subText: "text-slate-300",
+        mutedText: "text-slate-400",
+      },
+      cobalt_executive: {
+        cardBg: "bg-[#0d1c3c] border-blue-800/70 text-slate-50",
+        boxBg: "bg-[#142a56] border-blue-700/60",
+        subText: "text-blue-100",
+        mutedText: "text-blue-300",
+      },
+      emerald_growth: {
+        cardBg: "bg-[#0b231d] border-emerald-800/70 text-emerald-50",
+        boxBg: "bg-[#11342b] border-emerald-700/60",
+        subText: "text-emerald-100",
+        mutedText: "text-emerald-300",
+      },
+      editorial_ivory: {
+        cardBg: "bg-white border-slate-300 text-slate-900",
+        boxBg: "bg-slate-100 border-slate-300",
+        subText: "text-slate-700",
+        mutedText: "text-slate-500",
+      },
+    };
+
+    const ACCENT_BADGES = {
+      rose: { text: "text-rose-400", border: "border-rose-400/50", bar: "bg-rose-400", dot: "bg-rose-400" },
+      sky: { text: "text-sky-400", border: "border-sky-400/50", bar: "bg-sky-400", dot: "bg-sky-400" },
+      emerald: { text: "text-emerald-400", border: "border-emerald-400/50", bar: "bg-emerald-400", dot: "bg-emerald-400" },
+      indigo: { text: "text-indigo-400", border: "border-indigo-400/50", bar: "bg-indigo-400", dot: "bg-indigo-400" },
+      amber: { text: "text-amber-400", border: "border-amber-400/50", bar: "bg-amber-400", dot: "bg-amber-400" },
+    };
+
+    function App() {
+      const [payload, setPayload] = useState(null);
+      const [themes, setThemes] = useState([]);
+      const [presets, setPresets] = useState([]);
+      const [rawIdea, setRawIdea] = useState("");
+      const [themeId, setThemeId] = useState("obsidian_slate");
+      const [aspectRatio, setAspectRatio] = useState("4:5 (1080x1350)");
+      const [handle, setHandle] = useState("@founder.playbook");
+      const [activeTab, setActiveTab] = useState("studio");
+      const [selectedSlideIdx, setSelectedSlideIdx] = useState(0);
+      const [isRunning, setIsRunning] = useState(false);
+      const [isRendering, setIsRendering] = useState(false);
+      const [cacheBuster, setCacheBuster] = useState(Date.now());
+      const [statusBanner, setStatusBanner] = useState("System Ready — Connected to Python FastAPI Pipeline");
+
+      const ideaFormRef = useRef(null);
+
+      useEffect(() => {
+        fetch("/api/state")
+          .then((r) => r.json())
+          .then((data) => {
+            setPayload(data.payload);
+            setThemes(data.themes || []);
+            setPresets(data.presets || []);
+            setRawIdea(data.payload?.raw_founder_input || "");
+            setThemeId(data.payload?.brand_kit?.theme_id || "obsidian_slate");
+            setAspectRatio(data.payload?.aspect_ratio || "4:5 (1080x1350)");
+            setHandle(data.payload?.brand_kit?.handle || "@founder.playbook");
+            setCacheBuster(data.timestamp || Date.now());
+          })
+          .catch(() => {
+            setStatusBanner("Error loading /api/state — ensure `python3 server.py` is running.");
+          });
+      }, []);
+
+      const handleIdeaKeyDown = (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          if (event.isComposing || event.keyCode === 229) {
+            return;
+          }
+          if (ideaFormRef.current) {
+            ideaFormRef.current.requestSubmit();
+          }
+        }
+      };
+
+      const handleRunPipeline = async (e) => {
+        e.preventDefault();
+        if (!rawIdea.trim()) return;
+        setIsRunning(true);
+        setStatusBanner("Running 4-Stage Python Automation Pipeline (Research -> Copy -> Tokens -> 1080p Render)...");
+        try {
+          const res = await fetch("/api/pipeline/run", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              raw_idea: rawIdea,
+              theme_id: themeId,
+              aspect_ratio: aspectRatio,
+              handle,
+            }),
+          });
+          const data = await res.json();
+          setPayload(data.payload);
+          setCacheBuster(data.timestamp || Date.now());
+          setSelectedSlideIdx(0);
+          setStatusBanner(
+            `Pipeline completed in ${data.payload.total_duration_ms || 420}ms — 8 PNGs, LinkedIn PDF & Instagram ZIP updated.`
+          );
+        } catch (err) {
+          setStatusBanner("Error communicating with Python backend.");
+        } finally {
+          setIsRunning(false);
+        }
+      };
+
+      const handleSaveAndRenderEdits = async () => {
+        if (!payload) return;
+        setIsRendering(true);
+        setStatusBanner("Re-rendering 1080p PNG slides, LinkedIn PDF & Instagram ZIP via Pillow...");
+        try {
+          const updated = {
+            ...payload,
+            aspect_ratio: aspectRatio,
+            brand_kit: {
+              ...payload.brand_kit,
+              theme_id: themeId,
+              handle,
+            },
+          };
+          const res = await fetch("/api/slides/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ payload: updated }),
+          });
+          const data = await res.json();
+          setPayload(data.payload);
+          setCacheBuster(data.timestamp || Date.now());
+          setStatusBanner("Saved edits & regenerated 1080p PNGs + multi-page LinkedIn PDF.");
+        } catch (err) {
+          setStatusBanner("Failed to re-render slides.");
+        } finally {
+          setIsRendering(false);
+        }
+      };
+
+      const updateSlideField = (idx, field, value) => {
+        if (!payload) return;
+        const nextSlides = payload.slides.map((s, i) => (i === idx ? { ...s, [field]: value } : s));
+        setPayload({ ...payload, slides: nextSlides });
+      };
+
+      const updateSlideBullets = (idx, rawText) => {
+        const lines = rawText.split("\n");
+        updateSlideField(idx, "callout_bullets", lines);
+      };
+
+      if (!payload) {
+        return (
+          <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-8">
+            <div className="text-center space-y-3">
+              <div className="text-sky-400 font-semibold tracking-wider uppercase text-xs">
+                Initializing AI Carousel Studio
+              </div>
+              <p className="text-slate-400 text-sm">Loading Python automation pipeline state...</p>
+            </div>
+          </div>
+        );
+      }
+
+      const currentThemeStyle = THEME_STYLES[themeId] || THEME_STYLES.obsidian_slate;
+      const activeSlide = payload.slides[selectedSlideIdx] || payload.slides[0];
+
+      return (
+        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+          <header className="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-30">
+            <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center font-black text-slate-950 text-base">
+                  AI
+                </div>
+                <div>
+                  <h1 className="font-bold text-base tracking-tight flex items-center gap-2">
+                    Founder Carousel Automation Studio
+                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-400 border border-sky-500/30 font-medium">
+                      React + Tailwind + Python FastAPI
+                    </span>
+                  </h1>
+                  <p className="text-xs text-slate-400">{statusBanner}</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={handleSaveAndRenderEdits}
+                  disabled={isRendering}
+                  className="px-3.5 py-2 rounded-lg text-xs font-semibold bg-sky-500 hover:bg-sky-400 text-slate-950 transition cursor-pointer disabled:opacity-50"
+                >
+                  {isRendering ? "Rendering 1080p..." : "Sync & Render 1080p Slides"}
+                </button>
+                <a
+                  href={`/exports/linkedin_carousel.pdf?t=${cacheBuster}`}
+                  download="linkedin_carousel.pdf"
+                  className="px-3.5 py-2 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition"
+                >
+                  Export LinkedIn PDF
+                </a>
+                <a
+                  href={`/exports/instagram_carousel_bundle.zip?t=${cacheBuster}`}
+                  download="instagram_carousel_bundle.zip"
+                  className="px-3.5 py-2 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition"
+                >
+                  Export Instagram ZIP (PNGs + Copy)
+                </a>
+              </div>
+            </div>
+          </header>
+
+          <main className="max-w-7xl mx-auto w-full px-6 py-6 space-y-6 flex-1">
+            <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-900/70 border border-slate-800 rounded-2xl p-5">
+              <form ref={ideaFormRef} onSubmit={handleRunPipeline} className="lg:col-span-7 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <label htmlFor="founder-raw-idea" className="text-xs font-bold uppercase tracking-wider text-sky-400">
+                    1. Founder Raw Idea Input (Press Enter to Run Pipeline, Shift+Enter for Newline)
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {presets.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setRawIdea(p.raw_idea)}
+                        className="text-[11px] px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer"
+                      >
+                        Load: {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <textarea
+                  id="founder-raw-idea"
+                  value={rawIdea}
+                  onChange={(e) => setRawIdea(e.target.value)}
+                  onKeyDown={handleIdeaKeyDown}
+                  required
+                  minLength={15}
+                  placeholder="Dump a messy voice-note transcript, product insight, or contrarian thesis..."
+                  className="auto-fit-textarea rounded-xl bg-slate-950 border border-slate-800 px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-sky-400"
+                />
+
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div>
+                      <label htmlFor="theme-select" className="block text-[11px] text-slate-400 mb-1">
+                        Brand Theme
+                      </label>
+                      <select
+                        id="theme-select"
+                        value={themeId}
+                        onChange={(e) => setThemeId(e.target.value)}
+                        className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100"
+                      >
+                        {themes.map((t) => (
+                          <option key={t.id} value={t.id}>
+                            {t.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="aspect-select" className="block text-[11px] text-slate-400 mb-1">
+                        Target Aspect Ratio
+                      </label>
+                      <select
+                        id="aspect-select"
+                        value={aspectRatio}
+                        onChange={(e) => setAspectRatio(e.target.value)}
+                        className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100"
+                      >
+                        <option value="4:5 (1080x1350)">4:5 Portrait (1080×1350 — Recommended)</option>
+                        <option value="1:1 (1080x1080)">1:1 Square (1080×1080)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="handle-input" className="block text-[11px] text-slate-400 mb-1">
+                        Author Handle
+                      </label>
+                      <input
+                        id="handle-input"
+                        type="text"
+                        required
+                        value={handle}
+                        onChange={(e) => setHandle(e.target.value)}
+                        className="auto-fit-input bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isRunning}
+                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-indigo-500 text-slate-950 font-bold text-xs shadow-lg hover:opacity-95 transition cursor-pointer disabled:opacity-50"
+                  >
+                    {isRunning ? "Running Python Pipeline..." : "Generate 8-Slide Carousel ->"}
+                  </button>
+                </div>
+              </form>
+
+              <div className="lg:col-span-5 bg-slate-950/80 border border-slate-800/90 rounded-xl p-4 flex flex-col justify-between space-y-3">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                      2. AI Research & Angle Synthesis
+                    </span>
+                    <span className="text-[11px] text-slate-400">
+                      {payload.research_brief?.source_engine}
+                    </span>
+                  </div>
+                  <p className="text-xs font-semibold text-slate-100 mb-1">
+                    Thesis: {payload.research_brief?.core_thesis}
+                  </p>
+                  <p className="text-xs text-sky-300 bg-sky-950/40 border border-sky-800/50 rounded-lg px-3 py-2 mb-2">
+                    📊 {payload.research_brief?.primary_stat}
+                  </p>
+                  <div className="space-y-1">
+                    {(payload.research_brief?.three_pillars || []).map((pillar, i) => (
+                      <div key={i} className="text-[11px] text-slate-300 flex items-start gap-1.5">
+                        <span className="text-emerald-400 font-bold">{i + 1}.</span>
+                        <span>{pillar}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t border-slate-800 pt-2.5">
+                  <div className="text-[11px] font-semibold text-slate-400 mb-1.5">
+                    Python Automation Pipeline Telemetry:
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {(payload.pipeline_logs || []).slice(-4).map((log, i) => (
+                      <div key={i} className="bg-slate-900 border border-slate-800 rounded-md px-2.5 py-1.5 text-[11px]">
+                        <div className="font-semibold text-slate-200 flex justify-between">
+                          <span>{log.stage}</span>
+                          <span className="text-sky-400">{log.duration_ms}ms</span>
+                        </div>
+                        <div className="text-slate-400 truncate" title={log.summary}>
+                          {log.summary}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-3">
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("studio")}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition ${
+                    activeTab === "studio"
+                      ? "bg-sky-500 text-slate-950"
+                      : "bg-slate-900 text-slate-300 hover:bg-slate-800"
+                  }`}
+                >
+                  Interactive Slide Editor (8 Slides)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("rendered")}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition ${
+                    activeTab === "rendered"
+                      ? "bg-sky-500 text-slate-950"
+                      : "bg-slate-900 text-slate-300 hover:bg-slate-800"
+                  }`}
+                >
+                  1080p Rendered PNG Gallery (Pillow Output)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("integrations")}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition ${
+                    activeTab === "integrations"
+                      ? "bg-sky-500 text-slate-950"
+                      : "bg-slate-900 text-slate-300 hover:bg-slate-800"
+                  }`}
+                >
+                  Social Caption & Canva / Webhook JSON
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("architecture")}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition ${
+                    activeTab === "architecture"
+                      ? "bg-sky-500 text-slate-950"
+                      : "bg-slate-900 text-slate-300 hover:bg-slate-800"
+                  }`}
+                >
+                  Workflow Diagram & Tool Stack
+                </button>
+              </div>
+
+              <div className="text-xs text-slate-400">
+                Click any slide card below to inspect or edit copy, layout variant & semantic color tokens.
+              </div>
+            </div>
+
+            {activeTab === "studio" && (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <div className="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 sticky top-24">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div>
+                      <span className="text-xs uppercase font-bold tracking-wider text-sky-400">
+                        Editing Slide 0{activeSlide.slide_number} / 0{payload.slides.length}
+                      </span>
+                      <h2 className="text-sm font-bold text-slate-100 mt-0.5">
+                        Layout: {activeSlide.layout_variant}
+                      </h2>
+                    </div>
+                    <div className="flex gap-1">
+                      <button
+                        type="button"
+                        disabled={selectedSlideIdx === 0}
+                        onClick={() => setSelectedSlideIdx((i) => Math.max(0, i - 1))}
+                        className="px-2.5 py-1 rounded bg-slate-800 text-xs disabled:opacity-40 cursor-pointer"
+                      >
+                        ← Prev
+                      </button>
+                      <button
+                        type="button"
+                        disabled={selectedSlideIdx === payload.slides.length - 1}
+                        onClick={() => setSelectedSlideIdx((i) => Math.min(payload.slides.length - 1, i + 1))}
+                        className="px-2.5 py-1 rounded bg-slate-800 text-xs disabled:opacity-40 cursor-pointer"
+                      >
+                        Next →
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="slide-accent" className="block text-[11px] text-slate-400 mb-1">
+                        Accent Color Token
+                      </label>
+                      <select
+                        id="slide-accent"
+                        value={activeSlide.accent_token}
+                        onChange={(e) => updateSlideField(selectedSlideIdx, "accent_token", e.target.value)}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs"
+                      >
+                        <option value="rose">Rose (Hook / Problem)</option>
+                        <option value="sky">Sky Blue (Architecture)</option>
+                        <option value="emerald">Emerald (Outcome / CTA)</option>
+                        <option value="indigo">Indigo (Audit Matrix)</option>
+                        <option value="amber">Amber (Warning)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="slide-header-tag" className="block text-[11px] text-slate-400 mb-1">
+                        Header Category Tag
+                      </label>
+                      <input
+                        id="slide-header-tag"
+                        type="text"
+                        value={activeSlide.header_tag}
+                        onChange={(e) => updateSlideField(selectedSlideIdx, "header_tag", e.target.value)}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-[11px] text-slate-400 mb-1">
+                      <label htmlFor="slide-kicker">Kicker Eyebrow</label>
+                      <span>{activeSlide.kicker.length}/36 chars</span>
+                    </div>
+                    <input
+                      id="slide-kicker"
+                      type="text"
+                      value={activeSlide.kicker}
+                      onChange={(e) => updateSlideField(selectedSlideIdx, "kicker", e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-[11px] text-slate-400 mb-1">
+                      <label htmlFor="slide-headline">Slide Headline</label>
+                      <span className={activeSlide.headline.length > 70 ? "text-rose-400" : ""}>
+                        {activeSlide.headline.length}/70 chars
+                      </span>
+                    </div>
+                    <textarea
+                      id="slide-headline"
+                      value={activeSlide.headline}
+                      onChange={(e) => updateSlideField(selectedSlideIdx, "headline", e.target.value)}
+                      className="auto-fit-textarea bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-[11px] text-slate-400 mb-1">
+                      <label htmlFor="slide-body">Slide Body Copy</label>
+                      <span>{activeSlide.body.length}/165 chars</span>
+                    </div>
+                    <textarea
+                      id="slide-body"
+                      value={activeSlide.body}
+                      onChange={(e) => updateSlideField(selectedSlideIdx, "body", e.target.value)}
+                      className="auto-fit-textarea bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="slide-callout-title" className="block text-[11px] text-slate-400 mb-1">
+                      Callout Card Title
+                    </label>
+                    <input
+                      id="slide-callout-title"
+                      type="text"
+                      value={activeSlide.callout_title}
+                      onChange={(e) => updateSlideField(selectedSlideIdx, "callout_title", e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs font-semibold mb-2"
+                    />
+                    <label htmlFor="slide-callout-bullets" className="block text-[11px] text-slate-400 mb-1">
+                      Callout Card Lines (One per line)
+                    </label>
+                    <textarea
+                      id="slide-callout-bullets"
+                      value={(activeSlide.callout_bullets || []).join("\n")}
+                      onChange={(e) => updateSlideBullets(selectedSlideIdx, e.target.value)}
+                      className="auto-fit-textarea bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleSaveAndRenderEdits}
+                    disabled={isRendering}
+                    className="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition cursor-pointer"
+                  >
+                    {isRendering ? "Re-Rendering PNGs & PDF..." : "Apply Edits & Re-Render 1080p Exports"}
+                  </button>
+                </div>
+
+                <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {payload.slides.map((slide, idx) => {
+                    const badge = ACCENT_BADGES[slide.accent_token] || ACCENT_BADGES.sky;
+                    const isSelected = idx === selectedSlideIdx;
+                    return (
+                      <article
+                        key={slide.slide_number}
+                        onClick={() => setSelectedSlideIdx(idx)}
+                        className={`rounded-2xl border-2 p-6 flex flex-col justify-between transition cursor-pointer relative overflow-hidden ${
+                          aspectRatio.startsWith("1:1") ? "aspect-square" : "aspect-[4/5]"
+                        } ${currentThemeStyle.cardBg} ${
+                          isSelected ? "ring-2 ring-sky-400 shadow-2xl" : "hover:border-slate-500"
+                        }`}
+                      >
+                        <div className={`absolute top-0 left-0 right-0 h-1.5 ${badge.bar}`} />
+
+                        <div className="flex items-center justify-between text-[11px] font-bold tracking-wider uppercase">
+                          <span className={currentThemeStyle.mutedText}>{slide.header_tag}</span>
+                          <span className={`px-2.5 py-0.5 rounded-full border ${badge.border} ${badge.text}`}>
+                            0{slide.slide_number} / 0{payload.slides.length}
+                          </span>
+                        </div>
+
+                        <div className="my-auto py-3 space-y-3">
+                          <div className={`text-xs font-extrabold uppercase tracking-wider ${badge.text}`}>
+                            {slide.kicker}
+                          </div>
+                          <h3 className="text-xl font-extrabold leading-snug tracking-tight">
+                            {slide.headline}
+                          </h3>
+                          <p className={`text-xs leading-relaxed ${currentThemeStyle.subText}`}>
+                            {slide.body}
+                          </p>
+
+                          <div className={`rounded-xl border p-3.5 space-y-1.5 ${currentThemeStyle.boxBg}`}>
+                            <div className={`text-[11px] font-extrabold uppercase ${badge.text}`}>
+                              {slide.callout_title}
+                            </div>
+                            {(slide.callout_bullets || []).map((b, bi) => (
+                              <div key={bi} className="text-xs leading-snug font-medium">
+                                {b}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-700/50 flex items-center justify-between text-xs font-semibold">
+                          <div className="flex items-center gap-2">
+                            <span className={`w-3.5 h-3.5 rounded-full inline-block ${badge.dot}`} />
+                            <span>{handle}</span>
+                          </div>
+                          <span className={badge.text}>{slide.footer_cta}</span>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "rendered" && (
+              <div className="space-y-4">
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-sm font-bold text-slate-100">
+                      Python Pillow 1080p Rendered Output ({payload.assets?.dimensions || "1080x1350"})
+                    </h2>
+                    <p className="text-xs text-slate-400">
+                      These are the exact rasterized PNG images compiled into your LinkedIn multi-page PDF and Instagram ZIP bundle.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSaveAndRenderEdits}
+                    className="px-4 py-2 rounded-lg bg-sky-500 text-slate-950 font-bold text-xs cursor-pointer"
+                  >
+                    Force Re-Render PNGs
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  {payload.slides.map((s) => {
+                    const imgUrl = `/slides/slide_0${s.slide_number}.png?t=${cacheBuster}`;
+                    return (
+                      <div
+                        key={s.slide_number}
+                        className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden flex flex-col"
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={`Slide ${s.slide_number}: ${s.headline}`}
+                          className="w-full h-auto block"
+                        />
+                        <div className="p-3 flex items-center justify-between text-xs border-t border-slate-800">
+                          <span className="font-semibold text-slate-300">Slide 0{s.slide_number}.png</span>
+                          <a
+                            href={imgUrl}
+                            download={`slide_0${s.slide_number}.png`}
+                            className="text-sky-400 hover:underline font-medium"
+                          >
+                            Download PNG
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "integrations" && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="post-caption-editor" className="text-xs font-bold uppercase tracking-wider text-sky-400">
+                      LinkedIn & Instagram Companion Post Copy
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(payload.post_caption || "");
+                        setStatusBanner("Copied LinkedIn/Instagram post caption to clipboard!");
+                      }}
+                      className="px-3 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-sky-400 cursor-pointer"
+                    >
+                      Copy Caption
+                    </button>
+                  </div>
+                  <textarea
+                    id="post-caption-editor"
+                    value={payload.post_caption || ""}
+                    onChange={(e) => setPayload({ ...payload, post_caption: e.target.value })}
+                    className="auto-fit-textarea bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs leading-relaxed text-slate-200"
+                  />
+                </div>
+
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                      Canva Connect API (`/v1/autofills`) & Make/n8n Webhook Payload
+                    </span>
+                    <span className="text-[11px] text-slate-400">Auto-generated by Python Stage 3</span>
+                  </div>
+                  <pre className="bg-slate-950 border border-slate-800 rounded-xl p-4 text-[11px] text-slate-300 overflow-auto max-h-96">
+                    {JSON.stringify(payload.canva_autofill_mapping, null, 2)}
+                  </pre>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "architecture" && (
+              <div className="space-y-6">
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                  <h2 className="text-base font-bold text-slate-100">
+                    End-to-End Founder Carousel Workflow (6 Connected Stages)
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
+                    {[
+                      {
+                        step: "01. Raw Idea",
+                        tool: "Notion / Wispr Flow / React Form",
+                        desc: "Founder enters a 2-sentence thought or voice-note transcript.",
+                      },
+                      {
+                        step: "02. AI Research",
+                        tool: "Perplexity Sonar API + Python",
+                        desc: "Extracts core thesis, industry retention stats & 3 framework pillars.",
+                      },
+                      {
+                        step: "03. Copy & Arc",
+                        tool: "Gemini 2.5 / GPT-4o + Pydantic",
+                        desc: "Structures 8 slides with strict character budgets (headline <=70 chars).",
+                      },
+                      {
+                        step: "04. Visual Tokens",
+                        tool: "Brand Theme & Token Engine",
+                        desc: "Maps semantic colors (rose/sky/emerald/indigo) & layout variants.",
+                      },
+                      {
+                        step: "05. Editable Canvas",
+                        tool: "React Studio + Canva Autofill API",
+                        desc: "Populates an inline-editable 8-slide canvas + 1080p Pillow renderer.",
+                      },
+                      {
+                        step: "06. Review & Export",
+                        tool: "Multi-Page PDF + Instagram ZIP",
+                        desc: "Founder tweaks text in 60s and exports LinkedIn PDF + 4:5 PNG bundle.",
+                      },
+                    ].map((node, i) => (
+                      <div
+                        key={i}
+                        className="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-2"
+                      >
+                        <div className="text-xs font-extrabold text-sky-400">{node.step}</div>
+                        <div className="text-xs font-bold text-slate-100">{node.tool}</div>
+                        <p className="text-[11px] text-slate-400 leading-relaxed">{node.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
+

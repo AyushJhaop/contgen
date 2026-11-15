@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Founder Carousel Studio — Editable Sample Deliverable</title>
+  <style>
+    :root {
+      --bg-dark: #0B0F17;
+      --bg-card: #131B2E;
+      --bg-accent: #1E293B;
+      --primary: #38BDF8;
+      --secondary: #818CF8;
+      --emerald: #34D399;
+      --amber: #FBBF24;
+      --rose: #FB7185;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border: rgba(148, 163, 184, 0.18);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      background: #06090F;
+      color: var(--text-main);
+      padding: 32px;
+    }
+    .toolbar {
+      max-width: 1200px;
+      margin: 0 auto 28px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .toolbar h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+    .toolbar p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .toolbar-actions { display: flex; gap: 10px; }
+    button {
+      background: var(--primary);
+      color: #06090F;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+    .grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 28px;
+    }
+    .slide {
+      aspect-ratio: 4 / 5;
+      background: radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.14), transparent 45%),
+                  linear-gradient(165deg, #0F172A 0%, #090D16 100%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+    }
+    .slide[contenteditable="true"]:focus-within {
+      outline: 2px solid var(--primary);
+    }
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .slide-body {
+      margin: auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .kicker {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+    }
+    .headline {
+      font-size: 26px;
+      line-height: 1.18;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+    .headline span.accent { color: var(--primary); }
+    .headline span.warn { color: var(--rose); }
+    .headline span.ok { color: var(--emerald); }
+    .subcopy {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #CBD5E1;
+    }
+    .card-box {
+      background: rgba(30, 41, 59, 0.55);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .stat-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .stat-big {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.03em;
+    }
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .author {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: inline-block;
+    }
+    @media print {
+      body { background: #000; padding: 0; }
+      .toolbar { display: none; }
+      .grid { display: block; }
+      .slide { page-break-after: always; width: 1080px; height: 1350px; border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div>
+      <h1>Founder Carousel Studio — Editable Output (Click Any Slide Text to Edit)</h1>
+      <p>Topic: Why 90% of B2B AI Features Fail Adoption (And the 3-Layer Fix) • Format: 4:5 Portrait (1080×1350) for LinkedIn & Instagram</p>
+    </div>
+    <div class="toolbar-actions">
+      <button onclick="window.print()">Export PDF / Print Slides</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Slide 1 -->
+    <section class="slide" contenteditable="true">
+      <div class="slide-header">
+        <span>B2B PRODUCT PLAYBOOK</span>
+        <span class="pill">01 / 08</span>
+      </div>
+      <div class="slide-body">
+        <div class="kicker">THE AI ADOPTION PARADOX</div>
+        <h2 class="headline">Why <span class="warn">90% of B2B AI Features</span> Become Ghost Towns After Launch</h2>
+        <p class="subcopy">And the 3-layer product architecture top SaaS founders use to turn "cool demo" into daily habit.</p>
+        <div class="card-box">
+          <div class="stat-row">
+            <span class="stat-big">11%</span>
+            <span class="subcopy">Day-30 retention for bolt-on "Chat with your data" sidebars across B2B SaaS.</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <div class="author"><span class="avatar"></span> @founder.playbook</div>
+        <span>Swipe →</span>
+      </div>
+    </section>
+
+    <!-- Slide 2 -->
+    <section class="slide" contenteditable="true">
+      <div class="slide-header">
+        <span>THE PROBLEM</span>
+        <span class="pill">02 / 08</span>
+      </div>
+      <div class="slide-body">
+        <div class="kicker">MISTAKE #1: THE BLANK PROMPT TRAP</div>
+        <h2 class="headline">Users Don't Want Another <span class="warn">Empty Text Box</span></h2>
+        <p class="subcopy">When you ship a generic AI chat sidebar, you shift the cognitive load onto the user:</p>
+        <div class="card-box">
+          <p class="subcopy">❌ "What should I ask it?"</p>
+          <p class="subcopy">❌ "How much context does it already have?"</p>
+          <p class="subcopy">❌ "Can I trust this output in front of my boss?"</p>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <div class="author"><span class="avatar"></span> @founder.playbook</div>
+        <span>Swipe →</span>
+      </div>
+    </section>
+
+    <!-- Slide 3 -->
+    <section class="slide" contenteditable="true">
+      <div class="slide-header">
+        <span>DIAGNOSIS</span>
+        <span class="pill">03 / 08</span>
+      </div>
+      <div class="slide-body">
+        <div class="kicker">DEMO VALUE VS. WORKFLOW VALUE</div>
+        <h2 class="headline">Chat Interfaces Optimize for <span class="accent">Demos</span>, Not <span class="ok">Throughput</span></h2>
+        <p class="subcopy">Buyers clap on the sales call. Operators abandon it by week two because typing prompts is slower than clicking a button.</p>
+        <div class="card-box">
+          <p class="subcopy"><strong>Rule of Thumb:</strong> If your AI feature requires more than 8 words of user typing to do a recurring job, adoption drops by 70%+.</p>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <div class="author"><span class="avatar"></span> @founder.playbook</div>
+        <span>Swipe →</span>
+      </div>
+    </section>
+
+    <!-- Slide 4 -->
+    <section class="slide" contenteditable="true">
+      <div class="slide-header">
+        <span>THE FRAMEWORK</span>
+        <span class="pill">04 / 08</span>
+      </div>
+      <div class="slide-body">
+        <div class="kicker">THE 3-LAYER FIX — LAYER 1</div>
+        <h2 class="headline">1. <span class="accent">Event-Triggered</span> Execution (Zero Prompting)</h2>
+        <p class="subcopy">Don't wait for the user to ask. Trigger AI automatically on system events:</p>
+        <div class="card-box">
+          <p class="subcopy">⚡ Call ends → Pre-draft CRM field updates</p>
+          <p class="subcopy">⚡ Ticket arrives → Attach root-cause log snippet</p>
+          <p class="subcopy">⚡ PR opened → Flag breaking schema changes</p>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <div class="author"><span class="avatar"></span> @founder.playbook</div>
+        <span>Swipe →</span>
+      </div>
+    </section>
+
+    <!-- Slide 5 -->
+    <section class="slide" contenteditable="true">
+      <div class="slide-header">
+        <span>THE FRAMEWORK</span>
+        <span class="pill">05 / 08</span>
+      </div>
+      <div class="slide-body">
+        <div class="kicker">THE 3-LAYER FIX — LAYER 2</div>
+        <h2 class="headline">2. <span class="accent">Inline Diff UI</span> Instead of Walls of Text</h2>
+        <p class="subcopy">Never dump 400 words in a chat bubble. Present AI work as an inline diff right inside the record.</p>
+        <div class="card-box">
+          <p class="subcopy">✅ Show exact fields being changed</p>
+          <p class="subcopy">✅ Include 1-line citation / source link</p>
+          <p class="subcopy">✅ Give keyboard shortcuts: <strong>[Tab] Accept</strong> • <strong>[Esc] Dismiss</strong></p>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <div class="author"><span class="avatar"></span> @founder.playbook</div>
+        <span>Swipe →</span>
+      </div>
+    </section>
+
+    <!-- Slide 6 -->
+    <section class="slide" contenteditable="true">
+      <div class="slide-header">
+        <span>THE FRAMEWORK</span>
+        <span class="pill">06 / 08</span>
+      </div>
+      <div class="slide-body">
+        <div class="kicker">THE 3-LAYER FIX — LAYER 3</div>
+        <h2 class="headline">3. <span class="ok">Implicit Feedback Loops</span> From Edits</h2>
+        <p class="subcopy">Users rarely click 👍 or 👎. Capture the delta between what AI proposed and what the user actually saved.</p>
+        <div class="card-box">
+          <div class="stat-row">
+            <span class="stat-big">3.8×</span>
+            <span class="subcopy">Higher week-8 retention when workspace memory adapts to user edit diffs automatically.</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <div class="author"><span class="avatar"></span> @founder.playbook</div>
+        <span>Swipe →</span>
+      </div>
+    </section>
+
+    <!-- Slide 7 -->
+    <section class="slide" contenteditable="true">
+      <div class="slide-header">
+        <span>CHEAT SHEET</span>
+        <span class="pill">07 / 08</span>
+      </div>
+      <div class="slide-body">
+        <div class="kicker">BEFORE VS. AFTER</div>
+        <h2 class="headline">The <span class="accent">AI Feature Audit</span> Checklist</h2>
+        <div class="card-box">
+          <p class="subcopy">❌ <strong>Old:</strong> Chatbot sidebar → ✅ <strong>New:</strong> Event trigger</p>
+          <p class="subcopy">❌ <strong>Old:</strong> Blank prompt box → ✅ <strong>New:</strong> Pre-filled draft</p>
+          <p class="subcopy">❌ <strong>Old:</strong> Uncited paragraph → ✅ <strong>New:</strong> Inline diff + source</p>
+          <p class="subcopy">❌ <strong>Old:</strong> Thumbs up/down → ✅ <strong>New:</strong> Edit-delta memory</p>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <div class="author"><span class="avatar"></span> @founder.playbook</div>
+        <span>Swipe →</span>
+      </div>
+    </section>
+
+    <!-- Slide 8 -->
+    <section class="slide" contenteditable="true">
+      <div class="slide-header">
+        <span>TAKE ACTION</span>
+        <span class="pill">08 / 08</span>
+      </div>
+      <div class="slide-body">
+        <div class="kicker">TL;DR FOR PRODUCT FOUNDERS</div>
+        <h2 class="headline">Make AI <span class="ok">Invisible</span> in the UI, <span class="accent">Undeniable</span> in the Outcome.</h2>
+        <p class="subcopy">Audit your #1 AI feature today: Can your user get value in <strong>one single click</strong> without typing a single word?</p>
+        <div class="card-box">
+          <p class="subcopy">📌 <strong>Save this carousel</strong> for your next product sprint review.</p>
+          <p class="subcopy">💬 Follow <strong>@founder.playbook</strong> for weekly B2B SaaS teardown systems.</p>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <div class="author"><span class="avatar"></span> @founder.playbook</div>
+        <span>Save & Repost ♻️</span>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
+

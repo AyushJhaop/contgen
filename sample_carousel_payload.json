@@ -1,0 +1,371 @@
+{
+  "campaign_id": "carousel-1794757836",
+  "created_at": "2026-11-15T21:20:36",
+  "raw_founder_input": "I keep seeing B2B SaaS teams ship 'chat with your data' sidebars that look great in sales demos, but nobody uses them after week 2. The real winners trigger AI on background events, show inline diffs instead of chat walls, and learn from user edits.",
+  "aspect_ratio": "4:5 (1080x1350)",
+  "target_platforms": [
+    "LinkedIn (PDF Document)",
+    "Instagram (4:5 Carousel PNGs)"
+  ],
+  "brand_kit": {
+    "theme_id": "obsidian_slate",
+    "theme_name": "Obsidian Slate (Dark SaaS)",
+    "handle": "@founder.playbook",
+    "author_role": "Founder & Product Architect"
+  },
+  "research_brief": {
+    "source_engine": "Local Domain Research Synthesizer (GTM & Founder Sales Corpus)",
+    "core_thesis": "Hiring AEs before codifying a founder-led 14-day paid pilot script destroys early GTM velocity.",
+    "target_audience": "Seed to Series A Technical Founders",
+    "primary_stat": "68% of first-time SaaS AE hires before $1.5M ARR miss quota and churn within 9 months.",
+    "secondary_stat": "4.2x higher close rate when replacing free 60-day POCs with scoped 14-day Paid Pilots.",
+    "counter_intuitive_insight": "Prospects don't ghost after demos because of price\u2014they ghost because their internal champion lacks a 1-page CFO business case.",
+    "three_pillars": [
+      "Diagnose the #1 hair-on-fire bottleneck before showing a single screen",
+      "Replace open-ended 'free trials' with a 14-day Paid Pilot & 3 success criteria",
+      "Arm your buyer champion with a 1-page Forwardable Executive Memo"
+    ]
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "layout_variant": "hook_stat_cover",
+      "accent_token": "rose",
+      "header_tag": "B2B PRODUCT PLAYBOOK",
+      "kicker": "THE AI ADOPTION PARADOX",
+      "headline": "Why 90% of B2B AI Features Become Ghost Towns After Launch",
+      "body": "And the 3-layer product architecture top SaaS founders use to turn a 'cool sales demo' into a daily workflow habit.",
+      "callout_title": "11% DAY-30 RETENTION",
+      "callout_bullets": [
+        "Industry benchmark for bolt-on 'Chat with your data' sidebars across B2B SaaS products in 2026."
+      ],
+      "footer_cta": "Swipe ->"
+    },
+    {
+      "slide_number": 2,
+      "layout_variant": "problem_breakdown",
+      "accent_token": "rose",
+      "header_tag": "THE PROBLEM",
+      "kicker": "MISTAKE #1: THE BLANK PROMPT TRAP",
+      "headline": "Users Don't Want Another Empty Text Box",
+      "body": "When you ship a generic AI chat sidebar, you shift 100% of the cognitive load onto a busy operator:",
+      "callout_title": "FRICTION POINTS",
+      "callout_bullets": [
+        "[X] 'What prompt should I even type right now?'",
+        "[X] 'Does it have context from this customer record?'",
+        "[X] 'Can I trust this output in front of my VP?'"
+      ],
+      "footer_cta": "Swipe ->"
+    },
+    {
+      "slide_number": 3,
+      "layout_variant": "insight_rule",
+      "accent_token": "sky",
+      "header_tag": "THE DIAGNOSIS",
+      "kicker": "DEMO VALUE VS. WORKFLOW VALUE",
+      "headline": "Chat Interfaces Optimize for Demos, Not Throughput",
+      "body": "Buyers clap on the sales call. Operators abandon it by week two because typing prompts is slower than clicking a button.",
+      "callout_title": "THE 8-WORD RULE OF THUMB",
+      "callout_bullets": [
+        "If your AI feature requires >8 words of user typing to complete a recurring task, week-4 usage drops by 70%+."
+      ],
+      "footer_cta": "Swipe ->"
+    },
+    {
+      "slide_number": 4,
+      "layout_variant": "framework_step",
+      "accent_token": "sky",
+      "header_tag": "THE 3-LAYER FIX",
+      "kicker": "LAYER 1: ZERO-PROMPT TRIGGERS",
+      "headline": "1. Event-Triggered Execution (No Prompting)",
+      "body": "Don't wait for the user to ask. Trigger AI jobs automatically in the background on system events:",
+      "callout_title": "HIGH-CONVERTING TRIGGERS",
+      "callout_bullets": [
+        "[*] Call ends -> Pre-draft CRM stage & MEDDIC fields",
+        "[*] Ticket arrives -> Attach root-cause log snippet",
+        "[*] PR opened -> Flag breaking API schema changes"
+      ],
+      "footer_cta": "Swipe ->"
+    },
+    {
+      "slide_number": 5,
+      "layout_variant": "framework_step",
+      "accent_token": "sky",
+      "header_tag": "THE 3-LAYER FIX",
+      "kicker": "LAYER 2: INLINE DIFF UI",
+      "headline": "2. Inline Diff UI Instead of Walls of Text",
+      "body": "Never dump 400 words in a chat bubble. Present AI work as an inline diff right inside the system of record.",
+      "callout_title": "UI DESIGN CHECKLIST",
+      "callout_bullets": [
+        "[+] Highlight exact fields being added or modified",
+        "[+] Show a 1-line verifiable source citation",
+        "[+] Bind hotkeys: [Tab] Accept | [Esc] Dismiss"
+      ],
+      "footer_cta": "Swipe ->"
+    },
+    {
+      "slide_number": 6,
+      "layout_variant": "framework_step_stat",
+      "accent_token": "emerald",
+      "header_tag": "THE 3-LAYER FIX",
+      "kicker": "LAYER 3: IMPLICIT MEMORY",
+      "headline": "3. Implicit Feedback Loops From User Edits",
+      "body": "Less than 2% of users click thumbs-up/down. Instead, capture the delta between what AI proposed and what the user saved.",
+      "callout_title": "3.8x HIGHER RETENTION",
+      "callout_bullets": [
+        "Products that learn automatically from user edit diffs see 3.8x higher Week-8 retention than static prompts."
+      ],
+      "footer_cta": "Swipe ->"
+    },
+    {
+      "slide_number": 7,
+      "layout_variant": "comparison_matrix",
+      "accent_token": "indigo",
+      "header_tag": "ARCHITECTURE AUDIT",
+      "kicker": "BEFORE VS. AFTER CHEAT SHEET",
+      "headline": "The B2B AI Feature Audit Checklist",
+      "body": "Score your current roadmap against these four shifts before your next sprint planning:",
+      "callout_title": "4 SHIFTS THAT DRIVE HABIT",
+      "callout_bullets": [
+        "1. Chatbot Sidebar ---> System Event Trigger",
+        "2. Blank Text Box ---> Pre-Filled Action Draft",
+        "3. Uncited Paragraph ---> Inline Field Diff + Source",
+        "4. Thumbs Up/Down ---> Implicit Edit-Delta Memory"
+      ],
+      "footer_cta": "Swipe ->"
+    },
+    {
+      "slide_number": 8,
+      "layout_variant": "cta_outro",
+      "accent_token": "emerald",
+      "header_tag": "TAKE ACTION",
+      "kicker": "TL;DR FOR PRODUCT FOUNDERS",
+      "headline": "Make AI Invisible in the UI, Undeniable in the Outcome.",
+      "body": "Audit your #1 AI feature today: Can your user get verifiable value in ONE single click without typing a word?",
+      "callout_title": "FOUNDER PLAYBOOK",
+      "callout_bullets": [
+        "Bookmark this carousel for your next product review.",
+        "Follow @founder.playbook for weekly B2B SaaS teardowns."
+      ],
+      "footer_cta": "Save & Repost"
+    }
+  ],
+  "post_caption": "Why 90% of B2B AI Features Become Ghost Towns After Launch\n\nBenchmark: 68% of first-time SaaS AE hires before $1.5M ARR miss quota and churn within 9 months.\n\nProspects don't ghost after demos because of price\u2014they ghost because their internal champion lacks a 1-page CFO business case.\n\nHere is the 3-part architecture winning right now:\n1. Diagnose the #1 hair-on-fire bottleneck before showing a single screen\n2. Replace open-ended 'free trials' with a 14-day Paid Pilot & 3 success criteria\n3. Arm your buyer champion with a 1-page Forwardable Executive Memo\n\nSwipe through the 8-slide breakdown above for the full audit checklist.\n\nWhich pillar is your team prioritizing this quarter? \ud83d\udc47",
+  "canva_autofill_mapping": {
+    "endpoint": "POST https://api.canva.com/rest/v1/autofills",
+    "brand_template_id": "DAG_FOUNDER_CAROUSEL_4x5_V2",
+    "data": {
+      "brand_handle": {
+        "type": "text",
+        "text": "@founder.playbook"
+      },
+      "brand_theme": {
+        "type": "text",
+        "text": "Obsidian Slate (Dark SaaS)"
+      },
+      "slide_01_kicker": {
+        "type": "text",
+        "text": "THE AI ADOPTION PARADOX"
+      },
+      "slide_01_headline": {
+        "type": "text",
+        "text": "Why 90% of B2B AI Features Become Ghost Towns After Launch"
+      },
+      "slide_01_body": {
+        "type": "text",
+        "text": "And the 3-layer product architecture top SaaS founders use to turn a 'cool sales demo' into a daily workflow habit."
+      },
+      "slide_01_callout_title": {
+        "type": "text",
+        "text": "11% DAY-30 RETENTION"
+      },
+      "slide_01_callout_bullets": {
+        "type": "text",
+        "text": "Industry benchmark for bolt-on 'Chat with your data' sidebars across B2B SaaS products in 2026."
+      },
+      "slide_02_kicker": {
+        "type": "text",
+        "text": "MISTAKE #1: THE BLANK PROMPT TRAP"
+      },
+      "slide_02_headline": {
+        "type": "text",
+        "text": "Users Don't Want Another Empty Text Box"
+      },
+      "slide_02_body": {
+        "type": "text",
+        "text": "When you ship a generic AI chat sidebar, you shift 100% of the cognitive load onto a busy operator:"
+      },
+      "slide_02_callout_title": {
+        "type": "text",
+        "text": "FRICTION POINTS"
+      },
+      "slide_02_callout_bullets": {
+        "type": "text",
+        "text": "[X] 'What prompt should I even type right now?'\n[X] 'Does it have context from this customer record?'\n[X] 'Can I trust this output in front of my VP?'"
+      },
+      "slide_03_kicker": {
+        "type": "text",
+        "text": "DEMO VALUE VS. WORKFLOW VALUE"
+      },
+      "slide_03_headline": {
+        "type": "text",
+        "text": "Chat Interfaces Optimize for Demos, Not Throughput"
+      },
+      "slide_03_body": {
+        "type": "text",
+        "text": "Buyers clap on the sales call. Operators abandon it by week two because typing prompts is slower than clicking a button."
+      },
+      "slide_03_callout_title": {
+        "type": "text",
+        "text": "THE 8-WORD RULE OF THUMB"
+      },
+      "slide_03_callout_bullets": {
+        "type": "text",
+        "text": "If your AI feature requires >8 words of user typing to complete a recurring task, week-4 usage drops by 70%+."
+      },
+      "slide_04_kicker": {
+        "type": "text",
+        "text": "LAYER 1: ZERO-PROMPT TRIGGERS"
+      },
+      "slide_04_headline": {
+        "type": "text",
+        "text": "1. Event-Triggered Execution (No Prompting)"
+      },
+      "slide_04_body": {
+        "type": "text",
+        "text": "Don't wait for the user to ask. Trigger AI jobs automatically in the background on system events:"
+      },
+      "slide_04_callout_title": {
+        "type": "text",
+        "text": "HIGH-CONVERTING TRIGGERS"
+      },
+      "slide_04_callout_bullets": {
+        "type": "text",
+        "text": "[*] Call ends -> Pre-draft CRM stage & MEDDIC fields\n[*] Ticket arrives -> Attach root-cause log snippet\n[*] PR opened -> Flag breaking API schema changes"
+      },
+      "slide_05_kicker": {
+        "type": "text",
+        "text": "LAYER 2: INLINE DIFF UI"
+      },
+      "slide_05_headline": {
+        "type": "text",
+        "text": "2. Inline Diff UI Instead of Walls of Text"
+      },
+      "slide_05_body": {
+        "type": "text",
+        "text": "Never dump 400 words in a chat bubble. Present AI work as an inline diff right inside the system of record."
+      },
+      "slide_05_callout_title": {
+        "type": "text",
+        "text": "UI DESIGN CHECKLIST"
+      },
+      "slide_05_callout_bullets": {
+        "type": "text",
+        "text": "[+] Highlight exact fields being added or modified\n[+] Show a 1-line verifiable source citation\n[+] Bind hotkeys: [Tab] Accept | [Esc] Dismiss"
+      },
+      "slide_06_kicker": {
+        "type": "text",
+        "text": "LAYER 3: IMPLICIT MEMORY"
+      },
+      "slide_06_headline": {
+        "type": "text",
+        "text": "3. Implicit Feedback Loops From User Edits"
+      },
+      "slide_06_body": {
+        "type": "text",
+        "text": "Less than 2% of users click thumbs-up/down. Instead, capture the delta between what AI proposed and what the user saved."
+      },
+      "slide_06_callout_title": {
+        "type": "text",
+        "text": "3.8x HIGHER RETENTION"
+      },
+      "slide_06_callout_bullets": {
+        "type": "text",
+        "text": "Products that learn automatically from user edit diffs see 3.8x higher Week-8 retention than static prompts."
+      },
+      "slide_07_kicker": {
+        "type": "text",
+        "text": "BEFORE VS. AFTER CHEAT SHEET"
+      },
+      "slide_07_headline": {
+        "type": "text",
+        "text": "The B2B AI Feature Audit Checklist"
+      },
+      "slide_07_body": {
+        "type": "text",
+        "text": "Score your current roadmap against these four shifts before your next sprint planning:"
+      },
+      "slide_07_callout_title": {
+        "type": "text",
+        "text": "4 SHIFTS THAT DRIVE HABIT"
+      },
+      "slide_07_callout_bullets": {
+        "type": "text",
+        "text": "1. Chatbot Sidebar ---> System Event Trigger\n2. Blank Text Box ---> Pre-Filled Action Draft\n3. Uncited Paragraph ---> Inline Field Diff + Source\n4. Thumbs Up/Down ---> Implicit Edit-Delta Memory"
+      },
+      "slide_08_kicker": {
+        "type": "text",
+        "text": "TL;DR FOR PRODUCT FOUNDERS"
+      },
+      "slide_08_headline": {
+        "type": "text",
+        "text": "Make AI Invisible in the UI, Undeniable in the Outcome."
+      },
+      "slide_08_body": {
+        "type": "text",
+        "text": "Audit your #1 AI feature today: Can your user get verifiable value in ONE single click without typing a word?"
+      },
+      "slide_08_callout_title": {
+        "type": "text",
+        "text": "FOUNDER PLAYBOOK"
+      },
+      "slide_08_callout_bullets": {
+        "type": "text",
+        "text": "Bookmark this carousel for your next product review.\nFollow @founder.playbook for weekly B2B SaaS teardowns."
+      }
+    }
+  },
+  "pipeline_logs": [
+    {
+      "stage": "1. Research & Verification",
+      "engine": "Local Domain Research Synthesizer (GTM & Founder Sales Corpus)",
+      "duration_ms": 12,
+      "summary": "Extracted thesis & verified benchmark: '68% of first-time SaaS AE hires before $1.5M ARR miss quota and chur\u2026'"
+    },
+    {
+      "stage": "2. Narrative & Slide Copy",
+      "engine": "Character-Constrained JSON Structurer",
+      "duration_ms": 18,
+      "summary": "Structured 8 slides across 6 modular layout variants + post caption."
+    },
+    {
+      "stage": "3. Visual Direction & Tokens",
+      "engine": "Brand Token Engine (Obsidian Slate (Dark SaaS))",
+      "duration_ms": 8,
+      "summary": "Mapped semantic color tokens (rose/sky/emerald/indigo) & Canva Autofill dataset."
+    },
+    {
+      "stage": "4. Editable Canvas & Export Render",
+      "engine": "Pillow 1080p Renderer (1080x1350)",
+      "duration_ms": 554,
+      "summary": "Rendered 8 PNG slides, multi-page LinkedIn PDF & Instagram ZIP."
+    }
+  ],
+  "assets": {
+    "slide_urls": [
+      "/slides/slide_01.png",
+      "/slides/slide_02.png",
+      "/slides/slide_03.png",
+      "/slides/slide_04.png",
+      "/slides/slide_05.png",
+      "/slides/slide_06.png",
+      "/slides/slide_07.png",
+      "/slides/slide_08.png"
+    ],
+    "pdf_url": "/exports/linkedin_carousel.pdf",
+    "zip_url": "/exports/instagram_carousel_bundle.zip",
+    "slide_count": 8,
+    "dimensions": "1080x1350"
+  },
+  "total_duration_ms": 555
+}
